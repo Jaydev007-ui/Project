@@ -1,6 +1,6 @@
-streamlit==1.25.0
-transformers==4.28.1
-torch==2.0.1
-spacy==3.5.0
-nltk==3.8.1
-python-dotenv==1.0.0
+streamlit
+transformers
+torch
+spacy
+nltk
+python-dotenv
