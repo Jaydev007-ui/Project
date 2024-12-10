@@ -36,7 +36,7 @@ user_input = st.text_input("You:", placeholder="Type your message here...")
 if user_input:
     # Call the OpenAI API
     response = openai.ChatCompletion.create(
-        model="gpt-4o",  # You can use "gpt-4" instead of "gpt-4o-mini"
+        model="gpt-4o-mini",  # You can use "gpt-4" instead of "gpt-4o-mini"
         messages=[{"role": "user", "content": user_input}]
     )
 
