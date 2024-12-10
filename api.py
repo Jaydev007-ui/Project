@@ -6,7 +6,7 @@ import os
 
 # GitHub credentials
 username = "Jaydev007-ui"
-token = "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"
+token = "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"
 repo_name = "Project"
 repo_url = f"https://{username}:{token}@github.com/{username}/{repo_name}.git"
 
