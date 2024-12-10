@@ -1,2 +1,2 @@
-openai==0.27.0  # or the latest version you're using
-streamlit==1.25.0  # or the latest version you're using
+openai
+streamlit
