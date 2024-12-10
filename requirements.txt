@@ -1,6 +1,6 @@
-chatterbot==1.0.5
-chatterbot-corpus==1.2.0
-spacy==2.3.5
-python-dateutil==2.8.2
-pytz==2023.3
-sqlalchemy==1.3.23
+chatterbot
+chatterbot-corpus
+spacy
+python-dateutil
+pytz
+sqlalchemy
