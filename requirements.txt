@@ -4,3 +4,4 @@ spacy
 python-dateutil
 pytz
 sqlalchemy
+en_core_web_md
