@@ -1,50 +1,59 @@
-import openai
 import streamlit as st
+from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
 import git
 import os
 
-# Initialize the OpenAI API key
-openai.api_key = "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"
-
-# GitHub repository details
+# GitHub credentials
 username = "Jaydev007-ui"
 token = "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"
 repo_name = "Project"
+repo_url = f"https://{username}:{token}@github.com/{username}/{repo_name}.git"
 
-# Function to push code to GitHub
-def push_to_github():
-    try:
-        repo_dir = os.getcwd()  # Assuming you're pushing from the current directory
-        repo = git.Repo(repo_dir)
-        repo.git.add('--all')
-        repo.index.commit("Updated chatbot code with new changes")
+# Path to the local repository folder
+repo_local_path = "./local_repo"
+
+# Clone the repository if it does not exist locally
+if not os.path.exists(repo_local_path):
+    st.write("Cloning repository...")
+    git.Repo.clone_from(repo_url, repo_local_path)
+
+# Initialize the repo object
+repo = git.Repo(repo_local_path)
+
+# Create a new chatbot
+chatbot = ChatBot('MyBot')
+
+# Train the chatbot on the English corpus
+trainer = ChatterBotCorpusTrainer(chatbot)
+trainer.train('chatterbot.corpus.english')
+
+# Streamlit app interface
+st.title("ChatBot with GitHub Logging")
+
+# File to store the conversation log
+log_file_path = os.path.join(repo_local_path, "conversation_log.txt")
+
+# Input from the user
+user_input = st.text_input("You: ")
+
+if st.button("Submit"):
+    if user_input:
+        # Get bot response
+        bot_response = chatbot.get_response(user_input)
+        st.write(f"Bot: {bot_response}")
+
+        # Save conversation to log
+        with open(log_file_path, "a") as log_file:
+            log_file.write(f"You: {user_input}\n")
+            log_file.write(f"Bot: {bot_response}\n\n")
+
+        # Add and commit changes to Git
+        repo.git.add(log_file_path)
+        repo.index.commit(f"Updated conversation log with user input: {user_input}")
+        
+        # Push the changes to GitHub
         origin = repo.remote(name='origin')
-        origin.set_url(f"https://{username}:{token}@github.com/{username}/{repo_name}.git")
         origin.push()
-        st.success("Code pushed to GitHub successfully!")
-    except Exception as e:
-        st.error(f"Failed to push to GitHub: {e}")
-
-# Define Streamlit interface
-st.title("OpenAI GPT Chatbot with GitHub Integration")
-st.write("Ask anything, and the chatbot will respond.")
-
-# Get user input
-user_input = st.text_input("You:", placeholder="Type your message here...")
-
-# When the user provides input
-if user_input:
-    # Call the OpenAI API
-    response = openai.ChatCompletion.create(
-        model="gpt-4o-mini",  # You can use "gpt-4" instead of "gpt-4o-mini"
-        messages=[{"role": "user", "content": user_input}]
-    )
-
-    # Display the response from the AI
-    ai_response = response['choices'][0]['message']['content']
-    st.write(f"Bot: {ai_response}")
-
-    # Provide a button to push changes to GitHub
-    if st.button("Push to GitHub"):
-        push_to_github()
+        st.success("Conversation logged and pushed to GitHub!")
 
