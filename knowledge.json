@@ -1,0 +1,7 @@
+// data/knowledge.json
+{
+    "greeting": "Hello! How can I assist you today?",
+    "information": "You can ask me for any information about our products and services.",
+    "farewell": "Goodbye! Have a nice day!",
+    "default": "Sorry, I couldn't understand that. Could you rephrase?"
+}
