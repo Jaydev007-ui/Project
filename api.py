@@ -4,9 +4,9 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 import git
 import os
 
-# GitHub credentials
-username = "Jaydev007-ui"
-token = "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"
+# Load GitHub credentials from environment variables for security
+username = os.getenv("GITHUB_USERNAME", "Jaydev007-ui")
+token = os.getenv("GITHUB_TOKEN", "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")  # Set this in your environment
 repo_name = "Project"
 repo_url = f"https://{username}:{token}@github.com/{username}/{repo_name}.git"
 
@@ -16,7 +16,12 @@ repo_local_path = "./local_repo"
 # Clone the repository if it does not exist locally
 if not os.path.exists(repo_local_path):
     st.write("Cloning repository...")
-    git.Repo.clone_from(repo_url, repo_local_path)
+    try:
+        git.Repo.clone_from(repo_url, repo_local_path)
+        st.success("Repository cloned successfully!")
+    except git.exc.GitCommandError as e:
+        st.error("Failed to clone repository. Please check your credentials and try again.")
+        st.write(f"Error details: {e}")
 
 # Initialize the repo object
 repo = git.Repo(repo_local_path)
@@ -49,11 +54,14 @@ if st.button("Submit"):
             log_file.write(f"Bot: {bot_response}\n\n")
 
         # Add and commit changes to Git
-        repo.git.add(log_file_path)
-        repo.index.commit(f"Updated conversation log with user input: {user_input}")
-        
-        # Push the changes to GitHub
-        origin = repo.remote(name='origin')
-        origin.push()
-        st.success("Conversation logged and pushed to GitHub!")
+        try:
+            repo.git.add(log_file_path)
+            repo.index.commit(f"Updated conversation log with user input: {user_input}")
 
+            # Push the changes to GitHub
+            origin = repo.remote(name='origin')
+            origin.push()
+            st.success("Conversation logged and pushed to GitHub!")
+        except git.exc.GitCommandError as e:
+            st.error("Failed to push changes to GitHub.")
+            st.write(f"Error details: {e}")
