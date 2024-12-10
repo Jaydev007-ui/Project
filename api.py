@@ -3,6 +3,10 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 import git
 import os
+import spacy
+
+# Correct way to load a model
+nlp = spacy.load("en_core_web_sm")
 
 # Load GitHub credentials from environment variables for security
 username = os.getenv("GITHUB_USERNAME", "Jaydev007-ui")
