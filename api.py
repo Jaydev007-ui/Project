@@ -4,7 +4,7 @@ import git
 import os
 
 # Initialize the OpenAI API key
-openai.api_key = "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"
+openai.api_key = "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"
 
 # GitHub repository details
 username = "Jaydev007-ui"
